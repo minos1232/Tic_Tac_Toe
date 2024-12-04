@@ -32,6 +32,19 @@ class TicTacToe
     position.between?(0, 8) && game_board[position] == " "
   end
 
+  def winner?
+    win_combinations = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], # Rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], # Columns
+      [0, 4, 8], [2, 4, 6]             # Diagonals
+    ]
+
+    win_combinations.any? do |combo|
+      [game_board[combo[0]], game_board[combo[1]], game_board[combo[2]]].uniq.length == 1 &&
+        game_board[combo[0]] != " "
+    end
+  end
+
   def full_board?
     !game_board.include?(" ") 
   end
@@ -45,7 +58,10 @@ class TicTacToe
       player_move(current_player)
       display_board
 
-      if full_board?
+      if winner?
+        puts "#{current_player} wins! "
+        break
+      elsif full_board?
         puts "It's a draw!"
         break
       else
